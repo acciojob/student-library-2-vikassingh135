@@ -76,12 +76,12 @@ public class TransactionService {
         
         txn.setCard(card);
         
-        if(card.getCardStatus()==CardStatus.DEACTIVATED) {
+        if(card.getCardStatus().equals(CardStatus.DEACTIVATED)) {
             transactionRepository5.save(txn);
             throw new Exception("Card is invalid");
         }
         
-        if(max_allowed_books>=card.getBooks().size()) {
+        if(max_allowed_books<=card.getBooks().size()) {
             transactionRepository5.save(txn);
             throw new Exception("Book limit has reached for this card");
         } 
@@ -94,6 +94,7 @@ public class TransactionService {
        card.getBooks().add(book);
        cardRepository5.save(card);
        bookRepository5.updateBook(book);
+       txn = transactionRepository5.save(txn);
        return txn.getTransactionId(); //return transactionId instead
     }
 
