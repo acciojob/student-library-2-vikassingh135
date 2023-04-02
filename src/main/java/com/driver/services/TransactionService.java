@@ -1,5 +1,8 @@
 package com.driver.services;
 
+import com.driver.models.Book;
+import com.driver.models.Card;
+import com.driver.models.CardStatus;
 import com.driver.models.Transaction;
 import com.driver.models.TransactionStatus;
 import com.driver.repositories.BookRepository;
@@ -44,8 +47,44 @@ public class TransactionService {
         //If the transaction is successful, save the transaction to the list of transactions and return the id
 
         //Note that the error message should match exactly in all cases
+        Transaction txn = new Transaction();
+        txn.setTransactionStatus(TransactionStatus.FAILED);
+        txn.setIsIssueOperation(true);
+        Book book;
+        try{
+            book = bookRepository5.findById(bookId).get();
+        } catch(Exception e) {
+            transactionRepository5.save(txn);
+            throw new Exception("Book is either unavailable or not present");
+        }
+        txn.setBook(book);
+        Card card;
+        try{
+            card = cardRepository5.findById(cardId).get();
+        } catch(Exception e) {
+            transactionRepository5.save(txn);
+            throw new Exception("Card is invalid");
+        }
+        
+        txn.setCard(card);
+        
+        if(card.getCardStatus()==CardStatus.DEACTIVATED) {
+            transactionRepository5.save(txn);
+            throw new Exception("Card is invalid");
+        }
+        
+        if(max_allowed_books>=card.getBooks().size()) {
+            transactionRepository5.save(txn);
+            throw new Exception("Book limit has reached for this card");
+        } 
 
-       return null; //return transactionId instead
+        
+       txn.setTransactionStatus(TransactionStatus.SUCCESSFUL);
+       book.getTransactions().add(txn);
+       card.getBooks().add(book);
+       cardRepository5.save(card);
+       bookRepository5.save(book);
+       return transactionRepository5.save(txn).getTransactionId(); //return transactionId instead
     }
 
     public Transaction returnBook(int cardId, int bookId) throws Exception{
