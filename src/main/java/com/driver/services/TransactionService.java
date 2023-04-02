@@ -8,11 +8,13 @@ import com.driver.models.TransactionStatus;
 import com.driver.repositories.BookRepository;
 import com.driver.repositories.CardRepository;
 import com.driver.repositories.TransactionRepository;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class TransactionService {
@@ -87,22 +89,42 @@ public class TransactionService {
         
        txn.setTransactionStatus(TransactionStatus.SUCCESSFUL);
        book.getTransactions().add(txn);
+       book.setCard(card);
+       book.setAvailable(false);
        card.getBooks().add(book);
        cardRepository5.save(card);
-       bookRepository5.save(book);
-       return txn.getId()+""; //return transactionId instead
+       bookRepository5.updateBook(book);
+       return txn.getTransactionId(); //return transactionId instead
     }
 
     public Transaction returnBook(int cardId, int bookId) throws Exception{
 
         List<Transaction> transactions = transactionRepository5.find(cardId, bookId, TransactionStatus.SUCCESSFUL, true);
         Transaction transaction = transactions.get(transactions.size() - 1);
-
+        
+        Date issueDate = transaction.getTransactionDate();
+        long timeIssueTime = Math.abs(System.currentTimeMillis()-issueDate.getTime());
+        long no_of_days = TimeUnit.DAYS.convert(timeIssueTime, TimeUnit.MILLISECONDS);
+        
+        int fine = 0;
+        if(no_of_days > getMax_allowed_days) {
+            fine = (int)((no_of_days - getMax_allowed_days) * fine_per_day);
+        }
+        
+        Book book = transaction.getBook();
+        book.setAvailable(true);
+        book.setCard(null);
+        bookRepository5.updateBook(book);
+        
+        Transaction txn = new Transaction();
+        txn.setBook(book);
+        txn.setCard(transaction.getCard());
+        txn.setFineAmount(fine);
+        txn.setIssueOperation(false);
         //for the given transaction calculate the fine amount considering the book has been returned exactly when this function is called
         //make the book available for other users
         //make a new transaction for return book which contains the fine amount as well
-
-        Transaction returnBookTransaction  = null;
-        return returnBookTransaction; //return the transaction after updating all details
+        txn.setTransactionStatus(TransactionStatus.SUCCESSFUL);
+        return txn; //return the transaction after updating all details
     }
 }
