@@ -49,7 +49,7 @@ public class TransactionService {
         //Note that the error message should match exactly in all cases
         Transaction txn = new Transaction();
         txn.setTransactionStatus(TransactionStatus.FAILED);
-        txn.setIsIssueOperation(true);
+        txn.setIssueOperation(true);
         Book book;
         try{
             book = bookRepository5.findById(bookId).get();

@@ -84,7 +84,7 @@ public class Transaction {
         return isIssueOperation;
     }
 
-    public void setIsIssueOperation(boolean isIssueOperation) {
+    public void setIssueOperation(boolean isIssueOperation) {
         this.isIssueOperation = isIssueOperation;
     }
 
