@@ -57,6 +57,12 @@ public class TransactionService {
             transactionRepository5.save(txn);
             throw new Exception("Book is either unavailable or not present");
         }
+        
+        if(!book.isAvailable()) {
+            transactionRepository5.save(txn);
+            throw new Exception("Book is either unavailable or not present");
+        }
+        
         txn.setBook(book);
         Card card;
         try{
@@ -84,7 +90,7 @@ public class TransactionService {
        card.getBooks().add(book);
        cardRepository5.save(card);
        bookRepository5.save(book);
-       return transactionRepository5.save(txn).getTransactionId(); //return transactionId instead
+       return txn.getId()+""; //return transactionId instead
     }
 
     public Transaction returnBook(int cardId, int bookId) throws Exception{
