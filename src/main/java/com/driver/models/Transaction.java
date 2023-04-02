@@ -80,7 +80,7 @@ public class Transaction {
         this.fineAmount = fineAmount;
     }
 
-    public boolean isIsIssueOperation() {
+    public boolean isIssueOperation() {
         return isIssueOperation;
     }
 

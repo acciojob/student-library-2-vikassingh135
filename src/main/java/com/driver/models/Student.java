@@ -126,6 +126,13 @@ public class Student {
         this.updatedOn = updatedOn;
     }
 
+    public Student(String emailId, String name, String country) {
+        this.emailId = emailId;
+        this.name = name;
+        this.country = country;
+    }
+
+    
     
 
 }
