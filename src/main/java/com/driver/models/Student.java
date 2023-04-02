@@ -115,6 +115,17 @@ public class Student {
         this.updatedOn = updatedOn;
     }
 
+    public Student(int id, String emailId, String name, int age, String country, Card card, Date createdOn, Date updatedOn) {
+        this.id = id;
+        this.emailId = emailId;
+        this.name = name;
+        this.age = age;
+        this.country = country;
+        this.card = card;
+        this.createdOn = createdOn;
+        this.updatedOn = updatedOn;
+    }
+
     
 
 }

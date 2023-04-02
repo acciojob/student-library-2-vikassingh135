@@ -103,6 +103,16 @@ public class Transaction {
     public void setTransactionDate(Date transactionDate) {
         this.transactionDate = transactionDate;
     }
+
+    public Transaction(int id, Card card, Book book, int fineAmount, boolean isIssueOperation, TransactionStatus transactionStatus, Date transactionDate) {
+        this.id = id;
+        this.card = card;
+        this.book = book;
+        this.fineAmount = fineAmount;
+        this.isIssueOperation = isIssueOperation;
+        this.transactionStatus = transactionStatus;
+        this.transactionDate = transactionDate;
+    }
     
     
 }
