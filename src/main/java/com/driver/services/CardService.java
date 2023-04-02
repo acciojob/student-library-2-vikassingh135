@@ -25,7 +25,7 @@ public class CardService {
         student.setCard(card);
         studentRepository.save(student);
         //link student with a new card
-        return card;
+        return cardRepository3.save(card);
     }
 
     public void deactivateCard(int student_id){
